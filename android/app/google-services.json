@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "51974991350",
+    "project_id": "chatapp-f15dd",
+    "storage_bucket": "chatapp-f15dd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:51974991350:android:3c0716a60ba40906f36bd7",
+        "android_client_info": {
+          "package_name": "com.example.sap_chat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "51974991350-qk8321f7klgs7cq59g33l01gail8jh95.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sap_chat",
+            "certificate_hash": "84c7beac02caaf39c3b73a0bde9c2057acdd6be2"
+          }
+        },
+        {
+          "client_id": "51974991350-ue3moou7hc8iefc2t9kciva13560co75.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcTzLMX8GCZpawCM71GCJuEkN8K-rnAe4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "51974991350-ue3moou7hc8iefc2t9kciva13560co75.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
