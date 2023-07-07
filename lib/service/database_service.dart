@@ -12,12 +12,31 @@ class DatabaseService {
   // saving the userdata
   Future savingUserData(String fullName, String email) async {
     return await userCollection.doc(uid).set({
+      "status": true,
       "fullName": fullName,
       "email": email,
       "groups": [],
       "profilePic": "",
       "uid": uid,
     });
+  }
+
+  // Update the status field in the user document
+  Future<void> updateUserStatus(bool status) async {
+    await userCollection.doc(uid).update({
+      "status": status,
+    });
+  }
+
+  getUserStatus() async {
+    // Fetch the user document
+    DocumentSnapshot userSnapshot = await userCollection.doc(uid).get();
+
+    // Get the status field value
+    bool status = userSnapshot['status'];
+
+    // Return the status value
+    return status;
   }
 
   // getting user data

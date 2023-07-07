@@ -47,6 +47,8 @@ class AuthService {
       await HelperFunction.saveUserLoggedInStatus(false);
       await HelperFunction.saveUserEmailSF("");
       await HelperFunction.saveUserNameSF("");
+      await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
+          .updateUserStatus(false);
       await firebaseAuth.signOut();
     } catch (e) {
       return null;

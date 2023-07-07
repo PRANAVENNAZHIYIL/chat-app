@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../service/database_service.dart';
@@ -25,6 +26,7 @@ class _ChatPageState extends State<ChatPage> {
   Stream<QuerySnapshot>? chats;
   TextEditingController messageController = TextEditingController();
   String admin = "";
+  bool status = false;
 
   @override
   void initState() {
@@ -41,6 +43,14 @@ class _ChatPageState extends State<ChatPage> {
     DatabaseService().getGroupAdmin(widget.groupId).then((val) {
       setState(() {
         admin = val;
+      });
+    });
+    DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
+        .getUserStatus()
+        .then((val) {
+      setState(() {
+        status = val;
+        print(status);
       });
     });
   }
@@ -122,13 +132,16 @@ class _ChatPageState extends State<ChatPage> {
     return StreamBuilder(
       stream: chats,
       builder: (context, AsyncSnapshot snapshot) {
+        // print(widget.userName);
         return snapshot.hasData
             ? ListView.builder(
                 itemCount: snapshot.data.docs.length,
                 itemBuilder: (context, index) {
                   return MessageTile(
                       message: snapshot.data.docs[index]['message'],
-                      sender: snapshot.data.docs[index]['sender'],
+                      sender: status
+                          ? snapshot.data.docs[index]['sender']
+                          : "${snapshot.data.docs[index]['sender']} go away",
                       sentByMe: widget.userName ==
                           snapshot.data.docs[index]['sender']);
                 },
