@@ -45,14 +45,6 @@ class _ChatPageState extends State<ChatPage> {
         admin = val;
       });
     });
-    DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
-        .getUserStatus()
-        .then((val) {
-      setState(() {
-        status = val;
-        print(status);
-      });
-    });
   }
 
   @override
@@ -137,11 +129,11 @@ class _ChatPageState extends State<ChatPage> {
             ? ListView.builder(
                 itemCount: snapshot.data.docs.length,
                 itemBuilder: (context, index) {
+                  // print(status);
                   return MessageTile(
+                      uid: snapshot.data.docs[index]["userid"],
                       message: snapshot.data.docs[index]['message'],
-                      sender: status
-                          ? snapshot.data.docs[index]['sender']
-                          : "${snapshot.data.docs[index]['sender']} go away",
+                      sender: snapshot.data.docs[index]['sender'],
                       sentByMe: widget.userName ==
                           snapshot.data.docs[index]['sender']);
                 },
@@ -154,6 +146,7 @@ class _ChatPageState extends State<ChatPage> {
   sendMessage() {
     if (messageController.text.isNotEmpty) {
       Map<String, dynamic> chatMessageMap = {
+        "userid": FirebaseAuth.instance.currentUser!.uid,
         "message": messageController.text,
         "sender": widget.userName,
         "time": DateTime.now().millisecondsSinceEpoch,

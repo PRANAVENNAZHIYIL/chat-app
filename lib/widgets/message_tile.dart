@@ -1,15 +1,20 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
+import '../service/database_service.dart';
 
 class MessageTile extends StatefulWidget {
   final String message;
   final String sender;
   final bool sentByMe;
+  final String uid;
 
   const MessageTile(
       {Key? key,
       required this.message,
       required this.sender,
-      required this.sentByMe})
+      required this.sentByMe,
+      required this.uid})
       : super(key: key);
 
   @override
@@ -50,15 +55,41 @@ class _MessageTileState extends State<MessageTile> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              widget.sender.toUpperCase(),
-              textAlign: TextAlign.start,
-              style: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  letterSpacing: -0.5),
-            ),
+            StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                stream: DatabaseService().getUserStatus(widget.uid),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    // Handle the case where the data is still loading
+                    return const CircularProgressIndicator();
+                  }
+
+                  if (snapshot.hasError) {
+                    // Handle any error that occurred while fetching the data
+                    return Text('Error: ${snapshot.error}');
+                  }
+
+                  if (!snapshot.hasData || snapshot.data == null) {
+                    // Handle the case where the snapshot is null or doesn't contain any data
+                    return const Text('No data available');
+                  }
+                  final data =
+                      snapshot.data as DocumentSnapshot<Map<String, dynamic>>;
+                  final status = data.data()!['status'] as bool;
+                  // final status = ((? ??
+                  //         {})['status'] as bool? ??
+                  //     false);
+
+                  // final status = (snapshot?.data?['status']) as bool? ?? false;
+                  return Text(
+                    "${widget.sender.toUpperCase()}${status ? "" : " Away"}",
+                    textAlign: TextAlign.start,
+                    style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        letterSpacing: -0.5),
+                  );
+                }),
             const SizedBox(
               height: 8,
             ),

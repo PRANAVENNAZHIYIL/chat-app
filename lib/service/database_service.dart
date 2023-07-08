@@ -28,15 +28,12 @@ class DatabaseService {
     });
   }
 
-  getUserStatus() async {
+  Stream<DocumentSnapshot<Map<String, dynamic>>> getUserStatus(
+      String uid) async* {
     // Fetch the user document
-    DocumentSnapshot userSnapshot = await userCollection.doc(uid).get();
-
-    // Get the status field value
-    bool status = userSnapshot['status'];
-
-    // Return the status value
-    return status;
+    yield* userCollection.doc(uid).snapshots().map(
+          (snapshot) => snapshot as DocumentSnapshot<Map<String, dynamic>>,
+        );
   }
 
   // getting user data
@@ -144,10 +141,11 @@ class DatabaseService {
   // send message
   sendMessage(String groupId, Map<String, dynamic> chatMessageData) async {
     groupCollection.doc(groupId).collection("messages").add(chatMessageData);
-    groupCollection.doc(groupId).update({
-      "recentMessage": chatMessageData['message'],
-      "recentMessageSender": chatMessageData['sender'],
-      "recentMessageTime": chatMessageData['time'].toString(),
-    });
+    // groupCollection.doc(groupId).update({
+    //   "userid": FirebaseAuth.instance.currentUser!.uid,
+    //   "recentMessage": chatMessageData['message'],
+    //   "recentMessageSender": chatMessageData['sender'],
+    //   "recentMessageTime": chatMessageData['time'].toString(),
+    // });
   }
 }
